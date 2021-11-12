@@ -8,6 +8,7 @@ class TT(Enum):
     DIV = auto()
     POW = auto()
     NUM = auto()
+    R = auto()
     ABS = auto()
     LPAR = auto()
     RPAR = auto()
@@ -69,7 +70,6 @@ class NumberNode:
     def __repr__(self):
         return str(self.num)
 
-
 TOK_VALS = {
     "+": TT.PLUS,
     "-": TT.MINUS,
@@ -79,4 +79,5 @@ TOK_VALS = {
     "|": TT.ABS,
     "(": TT.LPAR,
     ")": TT.RPAR,
+    "r": TT.R,
 }

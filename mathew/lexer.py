@@ -23,12 +23,15 @@ class Lexer:
                 case " ":
                     self.advance()
 
-                case char if char in TOK_VALS:
+                case char if char.lower() in TOK_VALS:
                     tokens.append(Token(TOK_VALS[char]))
                     self.advance()
 
                 case char if char in "1234567890.":
-                    tokens.append(self.make_num())
+                    num = res.register(self.make_num())
+                    if res.error: 
+                        return res
+                    tokens.append(num)
                 
                 case char:
                     return res.failure(f"Unexpected Character '{char}'")
@@ -36,6 +39,7 @@ class Lexer:
         return res.success(tokens + [Token(TT.EOF)])
 
     def make_num(self):
+        res = ResultHandler()
         num_str = ""
 
         while self.current_char and self.current_char in "1234567890. ":
@@ -51,7 +55,10 @@ class Lexer:
             num_str += self.current_char
             self.advance()
 
-        return Token(
+        if num_str == ".":
+            return res.failure("Unexpected Character '.'")
+
+        return res.success(Token(
             TT.NUM,
             float(num_str) if "." in num_str else int(num_str)
-        )
+        ))

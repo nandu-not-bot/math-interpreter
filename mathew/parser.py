@@ -82,7 +82,7 @@ class Parser:
 
             return res.success(UnaryOpNode(op_tok, expr))
 
-        elif self.current_tok.type == TT.NUM:
+        elif self.current_tok.type in {TT.NUM, TT.R}:
             ret_val = NumberNode(self.current_tok)
             self.advance()
 

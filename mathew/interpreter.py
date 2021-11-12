@@ -1,3 +1,5 @@
+import json
+
 from .utils import TT, ResultHandler
 from .parser import BinaryOpNode, UnaryOpNode, NumberNode
 
@@ -53,4 +55,10 @@ class Interpreter:
                 return res.failure(f"Unsupported unary operation '{op_tok}'")
 
     def visit_NumberNode(self, node: NumberNode):
-        return ResultHandler().success(node.num.value)
+        res = ResultHandler()
+        if node.num.type == TT.NUM:
+            return res.success(int(node.num.value))
+        elif node.num.type == TT.R:
+            with open("info.json", "r") as f:
+                info = json.load(f)
+            return res.success(info["r"])
