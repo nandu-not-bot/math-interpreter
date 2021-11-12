@@ -23,7 +23,7 @@ class Parser:
         return res.success(term)
 
     def term(self):
-        return self.bin_op(self.factor, (TT.PLUS,))
+        return self.bin_op(self.factor, (TT.PLUS, TT.MINUS))
 
     def factor(self):
         return self.bin_op(self.power, (TT.MULT, TT.DIV))
