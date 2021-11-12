@@ -56,7 +56,7 @@ class Parser:
         elif self.current_tok.type == TT.ABS:
             self.advance()
 
-            expr = res.register(self.expr())
+            expr = UnaryOpNode(Token(TT.ABS), res.register(self.expr()))
             if res.error:
                 return res
 
@@ -64,7 +64,13 @@ class Parser:
                 return res.failure("Expected '|'")
             self.advance()
 
-            return res.success(UnaryOpNode(Token(TT.ABS), expr))
+            if self.current_tok.type in (TT.NUM, TT.LPAR):
+                atom = res.register(self.atom())
+                if res.error: return res
+
+                return res.success(BinaryOpNode(expr, Token(TT.MULT), atom))
+
+            return res.success(expr)
 
         elif self.current_tok.type in (TT.PLUS, TT.MINUS):
             op_tok = self.current_tok
@@ -74,7 +80,7 @@ class Parser:
             if res.error:
                 return res
 
-            if self.current_tok.type in (TT.NUM, TT.LPAR):
+            if self.current_tok.type == TT.LPAR:
                 atom = res.register(self.atom())
                 if res.error: return res
 
