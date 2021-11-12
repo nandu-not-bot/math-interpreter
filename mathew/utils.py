@@ -12,12 +12,6 @@ class TT(Enum):
     LPAR = auto()
     RPAR = auto()
     EOF = auto()
-    CMD = auto()
-
-
-CMDS = [
-    "bd"
-]
 
 
 class Token:
@@ -68,35 +62,12 @@ class UnaryOpNode:
 
 
 class NumberNode:
-    def __init__(self, num: Token):
+    def __init__(self, num: Token, is_neg: bool = False):
         self.num = num
+        self.is_neg = is_neg
 
     def __repr__(self):
         return str(self.num)
-
-
-class CMDNode:
-    def __init__(self, cmd_tok: Token):
-        self.cmd_tok = cmd_tok
-
-    def __repr__(self):
-        return f"!{self.cmd_tok.value}"
-
-
-class BDMode:
-    import json
-
-    @classmethod
-    def isactive(cls) -> bool:
-        with open("config.json", "r") as f:
-            config = cls.json.load(f)
-            return config["breakdown-mode"]
-
-    @classmethod
-    def set(cls, bdmode: bool):
-        with open("config.json", "w") as f:
-            config = {"breakdown-mode": bdmode}
-            cls.json.dump(config, f)
 
 
 TOK_VALS = {
@@ -107,5 +78,5 @@ TOK_VALS = {
     "^": TT.POW,
     "|": TT.ABS,
     "(": TT.LPAR,
-    ")": TT.RPAR
+    ")": TT.RPAR,
 }

@@ -1,4 +1,4 @@
-from .utils import TT, BinaryOpNode, CMDNode, NumberNode, Token, ResultHandler, UnaryOpNode
+from .utils import TT, BinaryOpNode, NumberNode, Token, ResultHandler, UnaryOpNode
 
 class Parser:
     def __init__(self, toks: list[Token]):
@@ -23,7 +23,7 @@ class Parser:
         return res.success(term)
 
     def term(self):
-        return self.bin_op(self.factor, (TT.PLUS, TT.MINUS))
+        return self.bin_op(self.factor, (TT.PLUS,))
 
     def factor(self):
         return self.bin_op(self.power, (TT.MULT, TT.DIV))
@@ -31,7 +31,7 @@ class Parser:
     def power(self):
         return self.bin_op(self.atom, (TT.POW,))
 
-    def atom(self):  # sourcery skip: remove-redundant-if
+    def atom(self):  # sourcery no-metrics skip: remove-redundant-if
         res = ResultHandler()
 
         if self.current_tok.type == TT.LPAR:
@@ -70,7 +70,7 @@ class Parser:
             op_tok = self.current_tok
             self.advance()
 
-            expr = res.register(self.expr())
+            expr = res.register(self.atom())
             if res.error:
                 return res
 

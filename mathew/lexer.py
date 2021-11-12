@@ -1,4 +1,4 @@
-from .utils import CMDS, TT, TOK_VALS, ResultHandler, Token
+from .utils import TT, TOK_VALS, ResultHandler, Token
 
 class Lexer:
     def __init__(self, text: str):
