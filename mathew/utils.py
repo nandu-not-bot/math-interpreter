@@ -10,8 +10,10 @@ class TT(Enum):
     NUM = auto()
     R = auto()
     ABS = auto()
+
     LPAR = auto()
     RPAR = auto()
+    SNUM = auto()
     EOF = auto()
 
 

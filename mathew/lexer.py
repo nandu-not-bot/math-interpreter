@@ -12,6 +12,10 @@ class Lexer:
     def advance(self):
         self.current_idx += 1
 
+    @property
+    def turn(self):
+        return self.text[self.current_idx - 1] if self.current_idx > 0 else None
+
     def make_toks(self):
         res = ResultHandler()
         tokens = []
@@ -42,15 +46,15 @@ class Lexer:
         res = ResultHandler()
         num_str = ""
 
-        while self.current_char and self.current_char in "1234567890. ":
+        while self.current_char and self.current_char in "1234567890. e+-":
             if self.current_char == " ":
-                self.advance()
-                continue 
-            if self.current_char == ".":
-                self.advance()
-                if "." not in num_str:
-                    num_str += "."
-                continue
+                return res.failure(f"Unexpected spacing in after '{num_str[-1]}'")
+            elif self.current_char == "." and ("." in num_str or "e" in num_str):
+                return res.failure(f"Unexpected '.' after '{num_str[-1]}'")
+            elif self.current_char == "e" and "e" in num_str:
+                return res.failure(f"Unexpected 'e' after '{num_str[-1]}'")
+            elif self.current_char in "+-" and num_str and self.turn != "e":
+                return res.success(Token(TT.NUM, float(num_str+"0") if "." in num_str or "e" in num_str else int(num_str)))
 
             num_str += self.current_char
             self.advance()
@@ -60,5 +64,5 @@ class Lexer:
 
         return res.success(Token(
             TT.NUM,
-            float(num_str) if "." in num_str else int(num_str)
+            float(num_str) if "." in num_str or "e" in num_str else int(num_str)
         ))

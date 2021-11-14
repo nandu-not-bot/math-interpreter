@@ -57,7 +57,11 @@ class Interpreter:
     def visit_NumberNode(self, node: NumberNode):
         res = ResultHandler()
         if node.num.type == TT.NUM:
-            return res.success(int(node.num.value))
+            return res.success(
+                int(node.num.value) 
+                if isinstance(node.num.value, int) 
+                else float(node.num.value)
+            )
         elif node.num.type == TT.R:
             with open("info.json", "r") as f:
                 info = json.load(f)
